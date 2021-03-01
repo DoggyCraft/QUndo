@@ -15,6 +15,8 @@ All commands begin with "qundo" as the label, however it can be substituted with
 
 "/qundo exit" removes all knowledge of block changes since the time point. This is a good idea to use, as the plugin keeps recording block changes, unless the player undoes the changes.
 
+"/qundo help" help command. Does the same as "/qundo".
+
 ## Permission
 There exists only one permission in this plugin.
 
