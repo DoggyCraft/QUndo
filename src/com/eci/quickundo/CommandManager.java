@@ -65,6 +65,12 @@ public class CommandManager implements CommandExecutor {
 							}
 							QUndo.formatMessage(player, ChatColor.RED + "No time point to be removed");
 						}
+						
+						// HELP
+						
+						else if (args[0].equalsIgnoreCase("help")) {
+							printInfo(sender);
+						}
 
 						// UNKNOWN
 

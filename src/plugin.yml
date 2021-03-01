@@ -1,12 +1,12 @@
 name: QUndo
 main: com.eci.quickundo.QUndo
-version: 1.1
+version: 1.1b
 author: Eci
 api-version: 1.16
 commands:
   qundo:
     description: Quick Undo command
-    usage: /qundo <set|remove|undo|redo>
+    usage: /qundo <set|undo|redo|exit|help>
   q:
     description: Quick Undo command
-    usage: /q <set|remove|undo|redo>
+    usage: /q <set|undo|redo|exit|help>
