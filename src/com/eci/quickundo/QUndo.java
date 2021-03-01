@@ -88,10 +88,11 @@ public class QUndo extends JavaPlugin implements Listener {
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
 		List<String> tabCommands = new ArrayList<String>();
-		tabCommands.add("set");
+		tabCommands.add("set"); // This is ew
 		tabCommands.add("undo");
 		tabCommands.add("redo");
 		tabCommands.add("exit");
+		tabCommands.add("help"); // ew ew
 		return tabCommands;
 	}
 
