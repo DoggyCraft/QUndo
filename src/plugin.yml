@@ -6,7 +6,7 @@ api-version: 1.16
 commands:
   qundo:
     description: Quick Undo command
-    usage: /qundo <set|undo|redo|exit|help>
+    usage: /qundo <set | undo | redo | exit | help>
   q:
     description: Quick Undo command
-    usage: /q <set|undo|redo|exit|help>
+    usage: /q <set | undo | redo | exit | help>
