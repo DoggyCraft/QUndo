@@ -12,14 +12,14 @@ import net.md_5.bungee.api.ChatColor;
 
 public class ChangeManager {
 
-	public Map<Location, BlockChange> changeMap; // Map for holding the different changes the player makes, and the plugin records. This makes it easy to locate previous changes by using the location as key
+	private Map<Location, BlockChange> changeMap; // Map for holding the different changes the player makes, and the plugin records. This makes it easy to locate previous changes by using the location as key
 	
-	public World world;
-	public Player player;
-	public boolean active; // Value for keeping track of whether undo has been done. Also functions as a checkpoint for whether the plugin should record mere changes in the main file
+	private World world;
+	private Player player;
+	private boolean active; // Value for keeping track of whether undo has been done. Also functions as a checkpoint for whether the plugin should record mere changes in the main file
 
 	public ChangeManager(Player player) {
-		this.changeMap = new HashMap<Location, BlockChange>();
+		this.changeMap = new HashMap<>();
 		this.player = player;
 		this.world = player.getWorld();
 		this.active = true;
@@ -33,7 +33,7 @@ public class ChangeManager {
 				Collection<BlockChange> changeCollection = changeMap.values();
 				
 				for (BlockChange change : changeCollection) {
-					world.getBlockAt(change.blockLocation).setType(change.prevBlockMaterial); // Change their material back to the previous
+					world.getBlockAt(change.getBlockChangeLocation()).setType(change.getPrevBlockMaterial()); // Change their material back to the previous
 				}
 				
 				active = false; // Set active to false, as the plugin should no longer keep track of the blocks that are broken and placed
@@ -60,7 +60,7 @@ public class ChangeManager {
 				Collection<BlockChange> changeCollection = changeMap.values();
 				
 				for (BlockChange change : changeCollection) {
-					world.getBlockAt(change.blockLocation).setType(change.currBlockMaterial); // Change their material back to the previous
+					world.getBlockAt(change.getBlockChangeLocation()).setType(change.getCurrBlockMaterial()); // Change their material back to the previous
 				}
 				
 				active = true; // Set active to true, as the blocks that are changed after this point, should be remembered
@@ -77,6 +77,14 @@ public class ChangeManager {
 			QUndo.formatMessage(player, ChatColor.RED + "Quick Redo has already been done");
 			
 		}
+	}
+	
+	public Map<Location, BlockChange> getChangeMap() {
+		return changeMap;
+	}
+	
+	public boolean isActive() {
+		return active;
 	}
 
 }

@@ -30,6 +30,8 @@ import net.md_5.bungee.api.ChatColor;
 
 public class QUndo extends JavaPlugin implements Listener {
 
+	public static String metaName = "qundo.ability";
+	
 	@Override
 	public void onEnable() {
 		PluginManager pm = Bukkit.getServer().getPluginManager();
@@ -45,15 +47,15 @@ public class QUndo extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event) {
 		Player player = event.getPlayer();
-		if (player.hasMetadata("qundo.ability") && player.getMetadata("qundo.ability").get(0).value() instanceof ChangeManager) { // Check whether the player actually has the metadata for safety. Also check whether the metadata value is of the right type (again for safety)
-			ChangeManager changeManager = (ChangeManager) player.getMetadata("qundo.ability").get(0).value();
-			Map<Location, BlockChange> changeMap = changeManager.changeMap;
-			if (changeManager.active) {
+		if (player.hasMetadata(metaName) && player.getMetadata(metaName).get(0).value() instanceof ChangeManager) { // Check whether the player actually has the metadata for safety. Also check whether the metadata value is of the right type (again for safety)
+			ChangeManager changeManager = (ChangeManager) player.getMetadata(metaName).get(0).value();
+			Map<Location, BlockChange> changeMap = changeManager.getChangeMap();
+			if (changeManager.isActive()) {
 				Block block = event.getBlock();
 				Location location = block.getLocation();
 				if (changeMap.containsKey(location)) { // Check if a previous change has been made on this exact location
 					BlockChange oldChange = changeMap.get(location); // Temporarily keep the old change, as to use it for inserting the old previous material of the block, into the new change.
-					changeMap.replace(location, new BlockChange(location, oldChange.prevBlockMaterial, Material.AIR));
+					changeMap.replace(location, new BlockChange(location, oldChange.getPrevBlockMaterial(), Material.AIR));
 					return; // Don't run the code below, if there has been a previous change
 				}
 
@@ -66,16 +68,16 @@ public class QUndo extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
 		Player player = event.getPlayer();
-		if (player.hasMetadata("qundo.ability") && player.getMetadata("qundo.ability").get(0).value() instanceof ChangeManager) {
-			ChangeManager changeManager = (ChangeManager) player.getMetadata("qundo.ability").get(0).value();
-			Map<Location, BlockChange> changeMap = changeManager.changeMap;
-			if (changeManager.active) { // Check whether undo has been done or not. Redo activates this again, so in case you want to make more changes after redoing, you can.
+		if (player.hasMetadata(metaName) && player.getMetadata(metaName).get(0).value() instanceof ChangeManager) {
+			ChangeManager changeManager = (ChangeManager) player.getMetadata(metaName).get(0).value();
+			Map<Location, BlockChange> changeMap = changeManager.getChangeMap();
+			if (changeManager.isActive()) { // Check whether undo has been done or not. Redo activates this again, so in case you want to make more changes after redoing, you can.
 				Block block = event.getBlockPlaced();
 				Location location = block.getLocation();
 				
 				if (changeMap.containsKey(location)) {
 					BlockChange oldChange = changeMap.get(location);
-					changeMap.replace(location, new BlockChange(location, oldChange.prevBlockMaterial, block.getType()));
+					changeMap.replace(location, new BlockChange(location, oldChange.getPrevBlockMaterial(), block.getType()));
 					return;
 				}
 
@@ -87,7 +89,7 @@ public class QUndo extends JavaPlugin implements Listener {
 	
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-		List<String> tabCommands = new ArrayList<String>();
+		List<String> tabCommands = new ArrayList<>();
 		tabCommands.add("set"); // This is ew
 		tabCommands.add("undo");
 		tabCommands.add("redo");
