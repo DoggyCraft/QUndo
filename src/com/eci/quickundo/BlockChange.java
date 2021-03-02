@@ -27,4 +27,8 @@ public class BlockChange {
 		return currBlockMaterial;
 	}
 	
+	public String toString() { // For later use
+		return "[" + blockChangeLocation.getBlockX() + ", " + blockChangeLocation.getBlockY() + ", " + blockChangeLocation.getBlockZ() + "] " + prevBlockMaterial + " -> " + currBlockMaterial;
+	}
+	
 }

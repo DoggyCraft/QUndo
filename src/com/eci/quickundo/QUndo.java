@@ -30,7 +30,7 @@ import net.md_5.bungee.api.ChatColor;
 
 public class QUndo extends JavaPlugin implements Listener {
 
-	public static String metaName = "qundo.ability";
+	public static final String metaName = "qundo.ability";
 	
 	@Override
 	public void onEnable() {
@@ -99,7 +99,7 @@ public class QUndo extends JavaPlugin implements Listener {
 	}
 
 	public static void formatMessage(CommandSender sender, String message) {
-		sender.sendMessage(ChatColor.GOLD + "[QUndo] " + message);
+		sender.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "[QUndo] " + ChatColor.RESET + message);
 	}
 
 }

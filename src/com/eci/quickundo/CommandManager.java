@@ -19,7 +19,7 @@ public class CommandManager implements CommandExecutor {
 
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (label.equalsIgnoreCase("q") || label.equalsIgnoreCase("qundo")) {
-			if (sender.hasPermission("qundo.use")) {
+			if (sender.hasPermission("qundo.use")) {				
 				if (args.length == 1) {
 					if (sender instanceof Player) {
 						Player player = (Player) sender;
@@ -30,6 +30,7 @@ public class CommandManager implements CommandExecutor {
 							ChangeManager changeManager = new ChangeManager(player);
 							player.setMetadata(QUndo.metaName, new FixedMetadataValue(plugin, changeManager)); // Add the class responsible for keeping track of changes to the players metadata
 							QUndo.formatMessage(player, ChatColor.GREEN + "Time point set");
+							return true;
 						}
 
 						// UNDO
@@ -39,8 +40,11 @@ public class CommandManager implements CommandExecutor {
 								ChangeManager changeManager = (ChangeManager) player.getMetadata(QUndo.metaName).get(0).value(); // Get the changeManager from the metadata
 								changeManager.undo(); // This could have been done directly on the .value() in a cast with parenthesis, however this is better for readability
 								return true;
+							} else { // In case the player has gotten permission, and used undo before setting time point
+								player.setMetadata(QUndo.metaName, new FixedMetadataValue(plugin, null)); // If the player didn't set time point before, an error would occur
 							}
 							QUndo.formatMessage(player, ChatColor.RED + "No time point set");
+							return true;
 						}
 
 						// REDO
@@ -50,8 +54,11 @@ public class CommandManager implements CommandExecutor {
 								ChangeManager changeManager = (ChangeManager) player.getMetadata(QUndo.metaName).get(0).value();
 								changeManager.redo();
 								return true;
+							} else {
+								player.setMetadata(QUndo.metaName, new FixedMetadataValue(plugin, null));
 							}
 							QUndo.formatMessage(player, ChatColor.RED + "No time point set");
+							return true;
 						}
 
 						// EXIT
@@ -63,6 +70,7 @@ public class CommandManager implements CommandExecutor {
 								return true; // Don't send the "No time point" message
 							}
 							QUndo.formatMessage(player, ChatColor.RED + "No time point to be removed");
+							return true;
 						}
 						
 						// HELP
@@ -79,6 +87,7 @@ public class CommandManager implements CommandExecutor {
 						}
 					} else {
 						QUndo.formatMessage(sender, ChatColor.RED + "This command can only be used by players");
+						return true;
 					}
 				} else if (args.length > 1) { // This might be changed in the future, if the need to exit and set other peoples time points ever arises
 					QUndo.formatMessage(sender, ChatColor.RED + "Too many arguments");
@@ -88,6 +97,7 @@ public class CommandManager implements CommandExecutor {
 				}
 			} else {
 				QUndo.formatMessage(sender, ChatColor.RED + "Insufficient permission");
+				return true;
 			}
 		}
 		return false;
